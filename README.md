@@ -93,6 +93,12 @@ To stop the load test:
 kubectl delete pod load-test -n trakzee-test
 ```
 
+Run five parallel load test pods with a one-liner:
+
+```bash
+for i in 1 2 3 4 5; do kubectl run load-test-$i --image=busybox -n trakzee-test --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://tomcat-service.trakzee-test.svc.cluster.local/; done" & done
+```
+
 For the webapp service instead of Tomcat:
 
 ```bash
