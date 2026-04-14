@@ -31,7 +31,7 @@ Tomcat (3 Pods)  ComServer (2 Pods)
 All pods connect to the same Redis and MySQL
 ```
 
-## Components
+## Component
 
 - 🚪 **Ingress** - Load balancer and entry point
 - 🌍 **Nginx** - Web server, 3 replicas
