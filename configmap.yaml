@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: trakzee-test
+data:
+  DB_HOST: mysql-service
+  DB_PORT: "3306"
+  REDIS_HOST: redis-service
+  REDIS_PORT: "6379"
+  COMSERVER_HOST: comserver-service
+  COMSERVER_PORT: "7107"
+  MYSQL_ROOT_PASSWORD: Trakzee@2024
+  MYSQL_DATABASE: trakzee_db

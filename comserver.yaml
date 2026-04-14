@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comserver
+  namespace: trakzee-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: comserver
+  template:
+    metadata:
+      labels:
+        app: comserver
+    spec:
+      containers:
+      - name: comserver
+        image: alpine:latest
+        ports:
+        - containerPort: 7107
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "ComServer running on port 7107" && tail -f /dev/null
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comserver-service
+  namespace: trakzee-test
+spec:
+  selector:
+    app: comserver
+  ports:
+  - port: 7107
+    targetPort: 7107
+  clusterIP: None
