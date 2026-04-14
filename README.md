@@ -31,7 +31,7 @@ Tomcat (3 Pods)  ComServer (2 Pods)
 All pods connect to the same Redis and MySQL
 ```
 
-## Component
+## Components
 
 - 🚪 **Ingress** - Load balancer and entry point
 - 🌍 **Nginx** - Web server, 3 replicas
@@ -64,6 +64,46 @@ kubectl apply -f tomcat-deployment.yaml
 kubectl apply -f comserver.yaml
 kubectl apply -f ingress.yaml
 kubectl apply -f hpa.yaml
+```
+
+## Load Testing
+
+Run a load test pod to continuously request the Tomcat service in the `trakzee-test` namespace:
+
+```bash
+kubectl run load-test --image=busybox -n trakzee-test --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://tomcat-service.trakzee-test.svc.cluster.local; done"
+```
+
+To run it in the background and view logs:
+
+```bash
+# Run load test in background
+kubectl run load-test --image=busybox -n trakzee-test --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://tomcat-service.trakzee-test.svc.cluster.local; done" &
+
+# Check if it's running
+kubectl get pods -n trakzee-test | grep load-test
+
+# See logs (to confirm it's generating load)
+kubectl logs -f load-test -n trakzee-test
+```
+
+To stop the load test:
+
+```bash
+kubectl delete pod load-test -n trakzee-test
+```
+
+For the webapp service instead of Tomcat:
+
+```bash
+kubectl run load-test-webapp --image=busybox -n trakzee-test --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://webapp-service.trakzee-test.svc.cluster.local; done"
+```
+
+Universal command (works for any service):
+
+```bash
+# Replace SERVICE_NAME and NAMESPACE
+kubectl run load-test --image=busybox -n NAMESPACE --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://SERVICE_NAME.NAMESPACE.svc.cluster.local; done"
 ```
 
 ## File Structure
